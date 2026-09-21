@@ -2,8 +2,15 @@ from __future__ import annotations
 
 from .drift import assess_drift
 from .forecasting import forecast_release
-from .schema import DriftAssessment, QualityState, QualityTelemetry, ReleaseForecast
+from .schema import (
+    DriftAssessment,
+    QualityState,
+    QualityTelemetry,
+    ReleaseForecast,
+    TrendAssessment,
+)
 from .state_estimator import estimate_quality_state
+from .trend import assess_trend
 
 
 class SoftwareQualityDigitalTwin:
@@ -30,7 +37,11 @@ class SoftwareQualityDigitalTwin:
             return None
         return assess_drift(self._states[-2], self._states[-1], threshold=threshold)
 
-    def forecast(self) -> ReleaseForecast:
+    def trend(self, window: int = 4) -> TrendAssessment:
+        return assess_trend(self._states, window=window)
+
+    def forecast(self, window: int = 4) -> ReleaseForecast:
         if not self._states:
             raise ValueError("digital twin has no quality state")
-        return forecast_release(self._states[-1])
+        trend = self.trend(window=window)
+        return forecast_release(self._states[-1], trend=trend)
