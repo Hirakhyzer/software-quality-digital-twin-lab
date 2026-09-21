@@ -1,4 +1,4 @@
-# Research Gap and PhD Positioning
+# Research Gap and Positioning
 
 ## Working Research Gap
 
@@ -40,7 +40,7 @@ A software-quality twin can only be useful if its internal state meaningfully tr
 
 **Research opportunity:** define fidelity, responsiveness, stability, and calibration metrics for software-quality twins.
 
-## Core PhD Research Question
+## Core Research Question
 
 > **How can software-quality digital twins be designed and empirically evaluated to detect quality degradation and forecast release risk using longitudinal, explainable, and reproducible evidence?**
 
