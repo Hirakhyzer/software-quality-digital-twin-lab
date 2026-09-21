@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png.png" alt="Software Quality Digital Twin Lab banner" width="100%" />
+</p>
+
 <h1 align="center">Software Quality Digital Twin Lab</h1>
 
 <p align="center"><b>A research framework for modeling, forecasting, and explaining software-quality evolution with digital twins.</b></p>
@@ -26,6 +30,10 @@ The project treats a software-quality digital twin as a **versioned quality-stat
 - support reproducible longitudinal SQA experiments.
 
 ## Digital Twin Concept
+
+<p align="center">
+  <img src="assets/software-quality-twin-architecture.png.png" alt="Software Quality Twin Architecture" width="96%" />
+</p>
 
 ```text
 Software version
@@ -65,6 +73,10 @@ These signals are intentionally transparent so the contribution of longitudinal 
 
 ## Longitudinal Intelligence
 
+<p align="center">
+  <img src="assets/quality-evolution-workflow.png.png" alt="Quality Evolution Workflow" width="96%" />
+</p>
+
 The twin now preserves version history and computes a rolling trajectory assessment from recent quality states.
 
 For every trend window it records:
@@ -93,6 +105,14 @@ The release forecast also produces a transparent one-step quality-score projecti
 | Static baseline comparison | Compare the twin against a transparent current-version SQA comparator. |
 | Longitudinal benchmark | Evaluate quality evolution rather than isolated static snapshots. |
 | Explainability | Preserve the evidence and trajectory responsible for each forecast. |
+
+## Release-Risk Dashboard Concept
+
+<p align="center">
+  <img src="assets/release-risk-dashboard.png.png" alt="Release Risk Dashboard" width="96%" />
+</p>
+
+The dashboard concept brings together quality score, risk level, recommended release action, early warnings, coverage and complexity trends, drift status, release history, and the evidence supporting each assessment.
 
 ## Experimental Comparison
 
@@ -139,6 +159,11 @@ The benchmark prints current-version static risk, twin risk, quality score, rele
 ```text
 software-quality-digital-twin-lab/
 ├── README.md
+├── assets/
+│   ├── banner.png.png
+│   ├── software-quality-twin-architecture.png.png
+│   ├── quality-evolution-workflow.png.png
+│   └── release-risk-dashboard.png.png
 ├── benchmarks/
 │   └── run_longitudinal_benchmark.py
 ├── data/
