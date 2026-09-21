@@ -39,9 +39,22 @@ class DriftAssessment:
 
 
 @dataclass(frozen=True)
+class TrendAssessment:
+    window_size: int
+    mean_delta: float
+    cumulative_delta: float
+    consecutive_declines: int
+    degrading: bool
+    recovering: bool
+    explanation: str
+
+
+@dataclass(frozen=True)
 class ReleaseForecast:
     version: str
     risk: RiskLevel
     confidence: float
     recommendation: str
     explanation: str
+    trend_risk: bool = False
+    projected_score: float | None = None
