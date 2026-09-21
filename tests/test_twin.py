@@ -42,8 +42,8 @@ def test_twin_preserves_version_history() -> None:
 def test_sustained_decline_creates_trend_warning_before_high_risk() -> None:
     twin = SoftwareQualityDigitalTwin()
     twin.update(QualityTelemetry("1.0.0", 92.0, 7.0, 0, 0, 100, True))
-    twin.update(QualityTelemetry("1.1.0", 88.0, 8.0, 0, 1, 180, True))
-    twin.update(QualityTelemetry("1.2.0", 83.0, 9.0, 0, 1, 220, True))
+    twin.update(QualityTelemetry("1.1.0", 79.0, 8.0, 0, 1, 180, True))
+    twin.update(QualityTelemetry("1.2.0", 78.0, 9.0, 0, 1, 220, True))
 
     trend = twin.trend()
     forecast = twin.forecast()
