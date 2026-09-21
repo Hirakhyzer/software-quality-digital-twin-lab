@@ -1,6 +1,6 @@
 <h1 align="center">Software Quality Digital Twin Lab</h1>
 
-<p align="center"><b>A PhD-oriented research framework for modeling, forecasting, and explaining software-quality evolution with digital twins.</b></p>
+<p align="center"><b>A research framework for modeling, forecasting, and explaining software-quality evolution with digital twins.</b></p>
 
 ## Overview
 
@@ -118,4 +118,4 @@ Released under the MIT License.
 
 ## Author
 
-Created by **Hira Khyzer** as a PhD-oriented software quality assurance and digital-twin research project.
+Created by **Hira Khyzer** as a software quality assurance and digital-twin research project.
