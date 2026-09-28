@@ -158,6 +158,10 @@ The benchmark prints current-version static risk, twin risk, quality score, rele
 
 ```text
 software-quality-digital-twin-lab/
+├── .github/workflows/python-check.yml
+├── .gitignore
+├── CITATION.cff
+├── LICENSE
 ├── README.md
 ├── assets/
 │   ├── banner.png.png
@@ -215,9 +219,13 @@ Experiments should record:
 
 See [`docs/evaluation-methodology.md`](docs/evaluation-methodology.md) and [`docs/longitudinal-forecasting-study.md`](docs/longitudinal-forecasting-study.md) for the current research protocol.
 
+## Citation
+
+Research-software citation metadata is provided in [`CITATION.cff`](CITATION.cff). GitHub-compatible citation tooling can use this file to generate a citation for the repository.
+
 ## License
 
-Released under the MIT License.
+Released under the [MIT License](LICENSE).
 
 ## Author
 
