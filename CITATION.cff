@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this research software, please cite it using the metadata below."
+title: "Software Quality Digital Twin Lab"
+type: software
+authors:
+  - family-names: "Khyzer"
+    given-names: "Hira"
+repository-code: "https://github.com/Hirakhyzer/software-quality-digital-twin-lab"
+license: MIT
+version: 0.1.0
+date-released: 2026-09-28
+keywords:
+  - software quality assurance
+  - digital twin
+  - release risk
+  - quality drift
+  - longitudinal software analytics
+  - trustworthy software engineering
+abstract: >-
+  A research framework for modeling, forecasting, and explaining software-quality
+  evolution using versioned digital twins, longitudinal telemetry, drift analysis,
+  release-risk forecasting, and evidence-quality assurance.
