@@ -1,0 +1,52 @@
+[
+  {
+    "trajectory_id": "stable-healthy",
+    "description": "Healthy releases with small benign variation and no intended degradation trend.",
+    "versions": [
+      {"version":"s1.0","coverage":91,"complexity":7.0,"failing_tests":0,"defect_count":0,"change_size":180,"tests_changed":true,"expected_risk":"low"},
+      {"version":"s1.1","coverage":90,"complexity":7.4,"failing_tests":0,"defect_count":0,"change_size":210,"tests_changed":true,"expected_risk":"low"},
+      {"version":"s1.2","coverage":92,"complexity":7.1,"failing_tests":0,"defect_count":0,"change_size":160,"tests_changed":true,"expected_risk":"low"},
+      {"version":"s1.3","coverage":90,"complexity":7.8,"failing_tests":0,"defect_count":0,"change_size":240,"tests_changed":true,"expected_risk":"low"}
+    ]
+  },
+  {
+    "trajectory_id": "gradual-erosion",
+    "description": "Coverage and complexity deteriorate gradually before overt failures appear.",
+    "versions": [
+      {"version":"g1.0","coverage":92,"complexity":7.0,"failing_tests":0,"defect_count":0,"change_size":180,"tests_changed":true,"expected_risk":"low"},
+      {"version":"g1.1","coverage":86,"complexity":9.5,"failing_tests":0,"defect_count":0,"change_size":260,"tests_changed":true,"expected_risk":"low"},
+      {"version":"g1.2","coverage":80,"complexity":12.0,"failing_tests":0,"defect_count":1,"change_size":360,"tests_changed":true,"expected_risk":"medium"},
+      {"version":"g1.3","coverage":72,"complexity":15.0,"failing_tests":1,"defect_count":2,"change_size":520,"tests_changed":false,"expected_risk":"high"}
+    ]
+  },
+  {
+    "trajectory_id": "sudden-regression",
+    "description": "A stable system experiences an abrupt regression rather than a gradual trend.",
+    "versions": [
+      {"version":"r1.0","coverage":90,"complexity":8.0,"failing_tests":0,"defect_count":0,"change_size":170,"tests_changed":true,"expected_risk":"low"},
+      {"version":"r1.1","coverage":91,"complexity":8.2,"failing_tests":0,"defect_count":0,"change_size":190,"tests_changed":true,"expected_risk":"low"},
+      {"version":"r1.2","coverage":66,"complexity":18.0,"failing_tests":2,"defect_count":3,"change_size":760,"tests_changed":false,"expected_risk":"high"},
+      {"version":"r1.3","coverage":68,"complexity":17.0,"failing_tests":1,"defect_count":3,"change_size":610,"tests_changed":true,"expected_risk":"high"}
+    ]
+  },
+  {
+    "trajectory_id": "recovery",
+    "description": "A degraded system improves after corrective engineering work.",
+    "versions": [
+      {"version":"c1.0","coverage":68,"complexity":17.0,"failing_tests":2,"defect_count":3,"change_size":640,"tests_changed":false,"expected_risk":"high"},
+      {"version":"c1.1","coverage":74,"complexity":14.0,"failing_tests":1,"defect_count":2,"change_size":420,"tests_changed":true,"expected_risk":"medium"},
+      {"version":"c1.2","coverage":82,"complexity":11.0,"failing_tests":0,"defect_count":1,"change_size":300,"tests_changed":true,"expected_risk":"medium"},
+      {"version":"c1.3","coverage":89,"complexity":8.0,"failing_tests":0,"defect_count":0,"change_size":210,"tests_changed":true,"expected_risk":"low"}
+    ]
+  },
+  {
+    "trajectory_id": "test-misalignment",
+    "description": "Large changes accumulate while tests are not updated, isolating test-change alignment risk.",
+    "versions": [
+      {"version":"t1.0","coverage":88,"complexity":8.0,"failing_tests":0,"defect_count":0,"change_size":180,"tests_changed":true,"expected_risk":"low"},
+      {"version":"t1.1","coverage":87,"complexity":8.5,"failing_tests":0,"defect_count":0,"change_size":520,"tests_changed":false,"expected_risk":"medium"},
+      {"version":"t1.2","coverage":85,"complexity":9.0,"failing_tests":0,"defect_count":1,"change_size":650,"tests_changed":false,"expected_risk":"medium"},
+      {"version":"t1.3","coverage":82,"complexity":10.0,"failing_tests":1,"defect_count":2,"change_size":720,"tests_changed":false,"expected_risk":"high"}
+    ]
+  }
+]
