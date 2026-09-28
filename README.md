@@ -27,6 +27,7 @@ The project treats a software-quality digital twin as a **versioned quality-stat
 - explain which evidence and trend features drove each forecast;
 - compare longitudinal reasoning against credible static baselines;
 - evaluate unsafe under-calls, false warnings, and early-warning behavior;
+- test robustness to missing, stale, and noisy telemetry;
 - support reproducible longitudinal SQA experiments.
 
 ## Digital Twin Concept
@@ -91,6 +92,36 @@ A sustained decline can escalate an otherwise low-risk current state from `appro
 
 The release forecast also produces a transparent one-step quality-score projection based on the recent mean trend. This is a baseline forecasting mechanism, not a claim that software quality follows a simple linear process.
 
+## Multi-Trajectory Benchmark
+
+The research benchmark now evaluates qualitatively different longitudinal behaviors instead of relying on one monotonic degradation history.
+
+Current trajectory families include:
+
+- stable healthy evolution;
+- gradual quality erosion;
+- sudden regression;
+- post-degradation recovery;
+- test-change misalignment.
+
+Each trajectory is evaluated separately against the static threshold baseline and the longitudinal twin. The benchmark reports risk accuracy, ordinal error, unsafe undercalls, early warnings, false warnings, recovery detection, and per-version predictions.
+
+Run it with:
+
+```bash
+python benchmarks/run_trajectory_suite.py
+```
+
+Or export a machine-readable experiment artifact:
+
+```bash
+python benchmarks/run_trajectory_suite.py \
+  --trend-window 4 \
+  --output results/trajectory-suite.json
+```
+
+See [`docs/trajectory-benchmark-protocol.md`](docs/trajectory-benchmark-protocol.md) for interpretation rules and threats to validity.
+
 ## Research Contributions
 
 | Contribution | Purpose |
@@ -102,8 +133,10 @@ The release forecast also produces a transparent one-step quality-score projecti
 | History-aware release forecasting | Test whether longitudinal context provides earlier warning than current-state thresholds alone. |
 | Safety-oriented metrics | Measure ordinal error and unsafe risk under-calls, not only raw accuracy. |
 | Early-warning metrics | Measure warning sensitivity and false-warning burden before future risk increases. |
+| Multi-trajectory evaluation | Separate stable, gradual, sudden, recovery, and test-misalignment behaviors. |
+| Telemetry robustness | Study sensitivity to missing, noisy, stale, and imputed quality evidence. |
+| Evidence assurance | Distinguish software-quality risk from confidence in the evidence supporting it. |
 | Static baseline comparison | Compare the twin against a transparent current-version SQA comparator. |
-| Longitudinal benchmark | Evaluate quality evolution rather than isolated static snapshots. |
 | Explainability | Preserve the evidence and trajectory responsible for each forecast. |
 
 ## Release-Risk Dashboard Concept
@@ -135,9 +168,13 @@ Implemented evaluation currently includes:
 - mean ordinal risk error;
 - unsafe undercall rate;
 - early-warning rate;
-- false-warning rate.
+- false-warning rate;
+- risk flip rate under telemetry perturbation;
+- unsafe flip rate under telemetry perturbation;
+- mean and maximum quality-score deviation;
+- per-trajectory recovery detection.
 
-The broader evaluation plan also covers drift lead time, recovery responsiveness, calibration, robustness to missing/noisy telemetry, fidelity, reviewer verification accuracy, and review workload.
+The broader evaluation plan also covers drift lead time, calibration, reviewer verification accuracy, review workload, and external validation on independently sourced software histories.
 
 ## Quick Start
 
@@ -150,9 +187,9 @@ python -m pip install -e ".[dev]"
 python examples/run_demo.py
 pytest
 python benchmarks/run_longitudinal_benchmark.py
+python benchmarks/run_trajectory_suite.py
+python benchmarks/run_telemetry_robustness.py
 ```
-
-The benchmark prints current-version static risk, twin risk, quality score, release recommendation, trend warning, recent mean trend, and version-to-version drift, followed by comparative evaluation metrics.
 
 ## Repository Structure
 
@@ -169,36 +206,43 @@ software-quality-digital-twin-lab/
 │   ├── quality-evolution-workflow.png.png
 │   └── release-risk-dashboard.png.png
 ├── benchmarks/
-│   └── run_longitudinal_benchmark.py
+│   ├── run_longitudinal_benchmark.py
+│   ├── run_trajectory_suite.py
+│   └── run_telemetry_robustness.py
 ├── data/
-│   └── quality_history.json
+│   ├── quality_history.json
+│   └── trajectory_suite.json
 ├── docs/
+│   ├── evaluation-methodology.md
+│   ├── longitudinal-forecasting-study.md
 │   ├── research-framework.md
 │   ├── research-gap.md
-│   ├── evaluation-methodology.md
-│   └── longitudinal-forecasting-study.md
+│   ├── telemetry-robustness-study.md
+│   └── trajectory-benchmark-protocol.md
 ├── examples/
 │   └── run_demo.py
 ├── src/software_quality_twin/
-│   ├── __init__.py
+│   ├── baselines.py
+│   ├── drift.py
+│   ├── evaluation.py
+│   ├── evidence_assurance.py
+│   ├── forecasting.py
 │   ├── schema.py
 │   ├── state_estimator.py
-│   ├── drift.py
+│   ├── telemetry_quality.py
 │   ├── trend.py
-│   ├── forecasting.py
-│   ├── baselines.py
-│   ├── evaluation.py
 │   └── twin.py
 └── tests/
-    ├── test_twin.py
-    └── test_longitudinal_evaluation.py
+    ├── test_longitudinal_evaluation.py
+    ├── test_trajectory_suite.py
+    └── test_twin.py
 ```
 
 ## Research Boundary
 
-This repository is a research prototype. It does not autonomously approve production releases or replace accountable software-quality professionals. Its purpose is to study measurable quality-state modeling, forecasting, drift, trajectory analysis, and human-interpretable evidence.
+This repository is a research prototype. It does not autonomously approve production releases or replace accountable software-quality professionals. Its purpose is to study measurable quality-state modeling, forecasting, drift, trajectory analysis, evidence quality, and human-interpretable assurance.
 
-The current scoring rules and trend thresholds are experimental parameters. They are not universal definitions of software quality and must be validated, sensitivity-tested, and frozen before held-out evaluation.
+The current scoring rules, synthetic labels, perturbations, and trend thresholds are experimental parameters. They are not universal definitions of software quality and must be validated, sensitivity-tested, and frozen before held-out evaluation.
 
 ## Reproducibility
 
@@ -217,7 +261,7 @@ Experiments should record:
 - model or threshold version;
 - random seed where applicable.
 
-See [`docs/evaluation-methodology.md`](docs/evaluation-methodology.md) and [`docs/longitudinal-forecasting-study.md`](docs/longitudinal-forecasting-study.md) for the current research protocol.
+See [`docs/evaluation-methodology.md`](docs/evaluation-methodology.md), [`docs/longitudinal-forecasting-study.md`](docs/longitudinal-forecasting-study.md), [`docs/telemetry-robustness-study.md`](docs/telemetry-robustness-study.md), and [`docs/trajectory-benchmark-protocol.md`](docs/trajectory-benchmark-protocol.md) for the current research protocols.
 
 ## Citation
 
