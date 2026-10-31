@@ -1,19 +1,32 @@
 from __future__ import annotations
 
+from math import isfinite
 from statistics import mean
 
-from .schema import QualityState, TrendAssessment
+from .schema import QualityState, RiskLevel, TrendAssessment
 
 
-def assess_trend(states: list[QualityState] | tuple[QualityState, ...], window: int = 4) -> TrendAssessment:
+_RISK_ORDER = {
+    RiskLevel.LOW: 0,
+    RiskLevel.MEDIUM: 1,
+    RiskLevel.HIGH: 2,
+}
+
+
+def assess_trend(
+    states: list[QualityState] | tuple[QualityState, ...],
+    window: int = 4,
+) -> TrendAssessment:
     """Assess the recent direction of quality evolution.
 
     The trend intentionally operates on versioned twin states rather than raw
-    telemetry. It is therefore usable with any future state estimator that
-    preserves the QualityState interface.
+    telemetry. Classification uses full-precision score deltas; rounding is only
+    used for reported metrics. Recovery includes both a rebound after an observed
+    decline and sustained improvement from an already-degraded starting state
+    when categorical risk also decreases.
     """
-    if window < 2:
-        raise ValueError("trend window must be at least 2")
+    if not isinstance(window, int) or isinstance(window, bool) or window < 2:
+        raise ValueError("trend window must be an integer of at least 2")
     if len(states) < 2:
         return TrendAssessment(
             window_size=len(states),
@@ -26,15 +39,21 @@ def assess_trend(states: list[QualityState] | tuple[QualityState, ...], window: 
         )
 
     recent = list(states[-window:])
-    deltas = [
-        round(current.quality_score - previous.quality_score, 2)
+    raw_deltas = [
+        current.quality_score - previous.quality_score
         for previous, current in zip(recent, recent[1:])
     ]
-    mean_delta = round(mean(deltas), 2)
-    cumulative_delta = round(recent[-1].quality_score - recent[0].quality_score, 2)
+    if not all(isfinite(delta) for delta in raw_deltas):
+        raise ValueError("quality-score deltas must be finite")
+
+    raw_mean_delta = mean(raw_deltas)
+    raw_cumulative_delta = recent[-1].quality_score - recent[0].quality_score
+    mean_delta = round(raw_mean_delta, 2)
+    cumulative_delta = round(raw_cumulative_delta, 2)
+    reported_deltas = [round(delta, 2) for delta in raw_deltas]
 
     consecutive_declines = 0
-    for delta in reversed(deltas):
+    for delta in reversed(raw_deltas):
         if delta < 0:
             consecutive_declines += 1
         else:
@@ -42,22 +61,34 @@ def assess_trend(states: list[QualityState] | tuple[QualityState, ...], window: 
 
     degrading = (
         consecutive_declines >= 2
-        or cumulative_delta <= -8.0
-        or mean_delta <= -4.0
+        or raw_cumulative_delta <= -8.0
+        or raw_mean_delta <= -4.0
     )
-    recovering = len(deltas) >= 2 and deltas[-1] > 0 and cumulative_delta < 0
 
-    if degrading:
+    latest_improving = raw_deltas[-1] > 0
+    rebound_after_decline = latest_improving and any(delta < 0 for delta in raw_deltas[:-1])
+    categorical_risk_improved = (
+        _RISK_ORDER[recent[-1].risk] < _RISK_ORDER[recent[0].risk]
+    )
+    recovery_from_degraded_baseline = (
+        latest_improving
+        and categorical_risk_improved
+        and raw_cumulative_delta > 0
+    )
+    recovering = rebound_after_decline or recovery_from_degraded_baseline
+
+    if degrading and not recovering:
         explanation = (
             f"Recent quality trajectory is degrading: mean version delta={mean_delta:.2f}, "
             f"cumulative delta={cumulative_delta:.2f}, consecutive declines={consecutive_declines}."
         )
     elif recovering:
         explanation = (
-            f"Quality shows recovery after earlier degradation: latest delta={deltas[-1]:.2f}, "
-            f"window cumulative delta={cumulative_delta:.2f}."
+            f"Quality shows recovery: latest delta={reported_deltas[-1]:.2f}, "
+            f"window cumulative delta={cumulative_delta:.2f}, "
+            f"risk moved from {recent[0].risk.value} to {recent[-1].risk.value}."
         )
-    elif mean_delta > 0:
+    elif raw_mean_delta > 0:
         explanation = (
             f"Recent quality trajectory is improving with mean version delta={mean_delta:.2f}."
         )
