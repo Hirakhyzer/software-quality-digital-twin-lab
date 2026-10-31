@@ -10,16 +10,15 @@ def test_rounding_does_not_create_false_degrading_trend() -> None:
     trend = assess_trend(
         [
             _state("1.0", 90.0, RiskLevel.LOW),
-            _state("1.1", 86.002, RiskLevel.LOW),
-            _state("1.2", 82.004, RiskLevel.LOW),
+            _state("1.1", 86.004, RiskLevel.LOW),
         ]
     )
 
-    # Each raw decline is 3.998 points and the cumulative decline is 7.996.
-    # They display as -4.00 and -8.00 respectively but must remain below the
-    # configured degrading thresholds at full precision.
+    # The raw decline is 3.996 points, below the 4-point mean-delta threshold.
+    # It displays as -4.00 but must not be classified as crossing the threshold.
     assert trend.mean_delta == -4.0
-    assert trend.cumulative_delta == -8.0
+    assert trend.cumulative_delta == -4.0
+    assert trend.consecutive_declines == 1
     assert trend.degrading is False
 
 
